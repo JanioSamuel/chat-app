@@ -1,0 +1,31 @@
+.chat-container {
+  width: 90%;
+  height: 80%;
+  border: 1px #ddd solid;
+  border-radius: 5px;
+}
+li {
+  list-style: none;
+  height: 100%;
+}
+
+h3 {
+  margin-top: 20px;
+}
+
+.leave {
+  margin-left: 85%;
+  border: none;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  color: #ff0000;
+}
+
+.leave:hover {
+  color: #228b22;
+  cursor: pointer;
+}
