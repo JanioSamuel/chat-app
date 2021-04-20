@@ -25,7 +25,15 @@ APPL.US quote is $134.16 per share
 - Backend: NodeJS
 - Frontend: ReactJS
 
-## Important
+
+## Run Application with Docker Compose
+
+In the root project run the following command: `docker-compose up`
+
+
+Or if you want to build the development environment, follow the steps bellow.
+
+## Build Dev Environment
 Follow these steps to run your application:
 
 If you use docker-compose, please, run the files inside `resources` folder.
