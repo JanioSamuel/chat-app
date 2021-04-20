@@ -1,7 +1,18 @@
 require('dotenv-safe').config();
 
 function connect() {
-  return require('amqplib').connect(process.env.AMQP_URL).then(conn => conn.createChannel());
+  return require('amqplib').connect(process.env.AMQP_URL).then(conn => {
+    console.log('Conected');
+    return conn.createChannel()
+  }).catch(err => {
+    console.log('Reconnecting...');
+    var promise = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        resolve(connect());
+      }, 5000)
+    })
+    return promise;
+  });
 }
 
 function createQueue(channel, queue) {

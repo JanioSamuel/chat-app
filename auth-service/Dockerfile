@@ -1,0 +1,19 @@
+FROM node:14.15.4
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+ARG SECRET
+ARG RELATIONAL_DB_SERVICE_URL
+
+ENV SECRET $SECRET
+ENV RELATIONAL_DB_SERVICE_URL $RELATIONAL_DB_SERVICE_URL
+
+COPY . .
+
+EXPOSE 3001
+
+CMD [ "node", "./src/server.js" ]

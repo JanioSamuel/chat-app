@@ -36,6 +36,7 @@ io.on('connect', function (socket) {
 
   queueActions.consume('socket.service', message => {
     const content = JSON.parse(message.content);
+
     if (content.Close === 'N/D') {
       io.emit('chat', 'Stock Bot', `Sorry, I couldn't find the stock ${content.Symbol}`)
     } else {

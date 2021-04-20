@@ -1,0 +1,101 @@
+version: "3"
+services:
+  rabbitmq-service:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq-service
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - 'rabbitmq_data:/data'
+
+  db_postgres:
+    image: postgres:10.1
+    container_name: chat-postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - 'postgresql_db:/var/lib/postgresql'
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: "chat"
+
+  relational-db-service:
+    image: "janiosamuel/relational-db-service:v1.0.1"
+    container_name: relational-db-service
+    restart: always
+    environment:
+      - DB_NAME=chat
+      - DB_USERNAME=root
+      - DB_PASSWORD=admin
+      - DB_URL=db_postgres
+      - DB_PORT=5432
+    ports:
+      - "3003:3003"
+    depends_on:
+      - db_postgres
+  
+  auth-service:
+    image: "janiosamuel/auth-service:v1.0.1"
+    container_name: auth-service
+    restart: always
+    environment:
+      - SECRET=jobsity
+      - RELATIONAL_DB_SERVICE_URL=http://relational-db-service:3003
+    ports:
+      - "3001:3001"
+
+  stock-service:
+    image: "janiosamuel/stock-service:v1.0.2"
+    container_name: stock-service
+    environment:
+      - STOCK_API=https://stooq.com
+      - AMQP_URL=amqp://root:root@rabbitmq-service:5672
+    ports:
+      - "3004:3004"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbitmq-service:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+      start_period: 160s
+    restart: always
+    depends_on:
+      - rabbitmq-service
+
+  socket-service:
+    image: "janiosamuel/socket-service:v1.0.2"
+    container_name: socket-service
+    restart: always
+    environment:
+      - AMQP_URL=amqp://root:root@rabbitmq-service:5672
+    ports:
+      - "3002:3002"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbitmq-service:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+      start_period: 160s
+    depends_on:
+      - rabbitmq-service
+
+  chat-frontend:
+    image: "janiosamuel/chat-frontend:v1.0.0"
+    container_name: chat-frontend
+    restart: always
+    environment:
+      - REACT_APP_AUTH_SERVICE_URL=http://localhost:3001
+      - REACT_APP_SOCKET_SERVER=http://localhost:3002
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgresql_db:
+  rabbitmq_data:

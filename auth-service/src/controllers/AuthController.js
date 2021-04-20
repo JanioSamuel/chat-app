@@ -21,17 +21,20 @@ async function index(req, res) {
 
   const response = await api.post('/login', { username })
 
-  const isSamePassword = await utils.comparePassword(password, response.data.password);
-  if (isSamePassword) {
-    const { id } = response.data;
-    const token = await jwt.sign({ id }, process.env.SECRET, {
-      expiresIn: 18000
-    });
-    const data = {
-      token: token,
-      username: response.data.username
+  if (response) {
+    const isSamePassword = await utils.comparePassword(password, response.data.password);
+    if (isSamePassword) {
+      const { id } = response.data;
+      const token = await jwt.sign({ id }, process.env.SECRET, {
+        expiresIn: 18000
+      });
+      const data = {
+        token: token,
+        username: response.data.username
+      }
+      return res.json(data);
     }
-    return res.json(data);
+    return res.json({ message: 'Invalid username or password.' })
   }
 
   return res.json({ message: 'Invalid username or password.' })
