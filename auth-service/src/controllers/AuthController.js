@@ -21,7 +21,7 @@ async function index(req, res) {
 
   const response = await api.post('/login', { username })
 
-  if (response) {
+  if (response && response.data) {
     const isSamePassword = await utils.comparePassword(password, response.data.password);
     if (isSamePassword) {
       const { id } = response.data;
