@@ -21,7 +21,6 @@ export default function Login({ history }) {
     try {
       const response = await api.post('/login', { username, password });
 
-      console.log('Response: ', response.data);
       if (response.data.token) {
         localStorage.setItem('x-token', response.data.token);
         localStorage.setItem('x-user', response.data.username);

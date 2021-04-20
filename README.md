@@ -28,7 +28,11 @@ APPL.US quote is $134.16 per share
 
 ## Run Application with Docker Compose
 
-In the root project run the following command: `docker-compose up`
+In the root project run the following command: 
+
+- `docker-compose up` 
+- Wait the application starts
+- Go to  `http://localhost:3000` and enjoy!
 
 
 Or if you want to build the development environment, follow the steps bellow.

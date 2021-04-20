@@ -87,7 +87,7 @@ services:
       - rabbitmq-service
 
   chat-frontend:
-    image: "janiosamuel/chat-frontend:v1.0.0"
+    image: "janiosamuel/chat-frontend:v1.0.1"
     container_name: chat-frontend
     restart: always
     environment:
